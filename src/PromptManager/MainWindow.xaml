@@ -15,6 +15,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -32,8 +33,33 @@
             </DockPanel>
         </materialDesign:ColorZone>
 
+        <!-- 工具栏：保存、另存为 -->
+        <Border Grid.Row="1" Padding="16,10" Background="{DynamicResource MaterialDesignPaper}"
+                BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding SaveToDiskCommand}"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        ToolTip="保存到默认位置"
+                        Margin="0,0,12,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ContentSave" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <TextBlock Text="保存" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="SaveAsButton"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        ToolTip="另存为到指定位置"
+                        Click="SaveAsButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ContentSaveAll" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <TextBlock Text="另存为" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Border>
+
         <!-- 卡片列表 -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="16">
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Padding="16">
             <ItemsControl x:Name="CardsItemsControl"
                           ItemsSource="{Binding Cards}">
                 <ItemsControl.ItemsPanel>

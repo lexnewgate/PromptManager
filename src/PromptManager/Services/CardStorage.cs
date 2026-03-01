@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using PromptManager.Models;
 
@@ -9,7 +10,8 @@ public class CardStorage
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         WriteIndented = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
     private readonly string _filePath;
@@ -41,8 +43,19 @@ public class CardStorage
 
     public void Save(IEnumerable<Card> cards)
     {
+        Save(cards, _filePath);
+    }
+
+    /// <summary>
+    /// 将卡片保存到指定路径。
+    /// </summary>
+    public void Save(IEnumerable<Card> cards, string filePath)
+    {
         var list = cards.ToList();
         var json = JsonSerializer.Serialize(list, JsonOptions);
-        File.WriteAllText(_filePath, json);
+        var dir = Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrEmpty(dir))
+            Directory.CreateDirectory(dir);
+        File.WriteAllText(filePath, json);
     }
 }

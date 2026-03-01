@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.Win32;
 using PromptManager.Models;
 using PromptManager.ViewModels;
 using PromptManager.Views;
@@ -16,6 +17,21 @@ public partial class MainWindow : Window
         InitializeComponent();
         _vm = new MainViewModel();
         DataContext = _vm;
+    }
+
+    private void SaveAsButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SaveFileDialog
+        {
+            Title = "另存为",
+            Filter = "JSON 文件 (*.json)|*.json|所有文件 (*.*)|*.*",
+            DefaultExt = ".json",
+            FileName = "cards.json"
+        };
+        if (dialog.ShowDialog() == true)
+        {
+            _vm.SaveToPath(dialog.FileName);
+        }
     }
 
     private void AddCardButton_OnClick(object sender, RoutedEventArgs e)

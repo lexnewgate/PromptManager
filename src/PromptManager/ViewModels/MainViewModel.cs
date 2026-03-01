@@ -31,6 +31,21 @@ public partial class MainViewModel : ObservableObject
         _storage.Save(Cards);
     }
 
+    [RelayCommand]
+    private void SaveToDisk()
+    {
+        Save();
+    }
+
+    /// <summary>
+    /// 保存到指定路径（由“另存为”选择）。
+    /// </summary>
+    public void SaveToPath(string filePath)
+    {
+        if (string.IsNullOrWhiteSpace(filePath)) return;
+        _storage.Save(Cards, filePath);
+    }
+
     public void AddCard(Card card)
     {
         card.Id = Guid.NewGuid();
