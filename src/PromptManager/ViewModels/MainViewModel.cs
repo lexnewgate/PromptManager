@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PromptManager.Models;
@@ -13,28 +14,61 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<Card> _cards = new();
 
+    [ObservableProperty]
+    private string _currentFilePath = string.Empty;
+
     public MainViewModel()
     {
-        Load();
+        LoadLastOrShowEmpty();
     }
 
-    public void Load()
+    /// <summary>
+    /// 读取上次打开的文件：若存在则加载，否则显示空面板（不创建文件）。
+    /// </summary>
+    private void LoadLastOrShowEmpty()
     {
-        var list = _storage.Load();
-        Cards.Clear();
-        foreach (var card in list)
-            Cards.Add(card);
+        var lastPath = _storage.GetLastFilePath();
+        if (!string.IsNullOrWhiteSpace(lastPath) && File.Exists(lastPath))
+        {
+            var list = _storage.LoadFromPath(lastPath);
+            Cards.Clear();
+            foreach (var card in list)
+                Cards.Add(card);
+            CurrentFilePath = lastPath;
+        }
+        else
+        {
+            Cards.Clear();
+            CurrentFilePath = string.Empty;
+        }
     }
 
     public void Save()
     {
-        _storage.Save(Cards);
+        if (!string.IsNullOrWhiteSpace(CurrentFilePath))
+            _storage.Save(Cards, CurrentFilePath);
+        else
+            _storage.Save(Cards);
     }
 
     [RelayCommand]
     private void SaveToDisk()
     {
         Save();
+    }
+
+    /// <summary>
+    /// 从指定路径打开卡片文件，替换当前列表。
+    /// </summary>
+    public void LoadFromPath(string filePath)
+    {
+        if (string.IsNullOrWhiteSpace(filePath)) return;
+        var list = _storage.LoadFromPath(filePath);
+        Cards.Clear();
+        foreach (var card in list)
+            Cards.Add(card);
+        CurrentFilePath = filePath;
+        _storage.SetLastFilePath(filePath);
     }
 
     /// <summary>

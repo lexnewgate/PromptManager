@@ -17,26 +17,29 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- 顶部标题栏 -->
         <materialDesign:ColorZone Grid.Row="0" Mode="PrimaryMid" Padding="16"
                                   materialDesign:ElevationAssist.Elevation="Dp4">
-            <DockPanel>
-                <TextBlock Text="Prompt Manager" FontSize="24" VerticalAlignment="Center" />
-                <Button x:Name="AddCardButton" DockPanel.Dock="Right"
-                        Style="{StaticResource MaterialDesignFloatingActionButton}"
-                        ToolTip="添加卡片"
-                        Click="AddCardButton_OnClick">
-                    <materialDesign:PackIcon Kind="Plus" Width="24" Height="24" />
-                </Button>
-            </DockPanel>
+            <TextBlock Text="Prompt Manager" FontSize="24" VerticalAlignment="Center" />
         </materialDesign:ColorZone>
 
         <!-- 工具栏：保存、另存为 -->
         <Border Grid.Row="1" Padding="16,10" Background="{DynamicResource MaterialDesignPaper}"
                 BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal">
+                <Button x:Name="OpenFileButton"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        ToolTip="打开已保存的卡片文件"
+                        Margin="0,0,12,0"
+                        Click="OpenFileButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FolderOpen" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <TextBlock Text="打开" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
                 <Button Command="{Binding SaveToDiskCommand}"
                         Style="{StaticResource MaterialDesignRaisedButton}"
                         ToolTip="保存到默认位置"
@@ -49,10 +52,20 @@
                 <Button x:Name="SaveAsButton"
                         Style="{StaticResource MaterialDesignRaisedButton}"
                         ToolTip="另存为到指定位置"
+                        Margin="0,0,12,0"
                         Click="SaveAsButton_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ContentSaveAll" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,6,0" />
                         <TextBlock Text="另存为" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="NewCardButton"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        ToolTip="新建卡片"
+                        Click="NewCardButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Plus" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <TextBlock Text="新建卡片" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -134,5 +147,13 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+
+        <!-- 底部状态栏：当前读取的文件 -->
+        <Border Grid.Row="3" Padding="16,8" Background="{DynamicResource MaterialDesignPaper}"
+                BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,1,0,0">
+            <TextBlock Text="{Binding CurrentFilePath, StringFormat='当前文件：{0}'}"
+                       FontSize="12" Opacity="0.7" VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis" ToolTip="{Binding CurrentFilePath}" />
+        </Border>
     </Grid>
 </Window>

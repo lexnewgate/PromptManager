@@ -19,6 +19,19 @@ public partial class MainWindow : Window
         DataContext = _vm;
     }
 
+    private void OpenFileButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = "打开卡片文件",
+            Filter = "JSON 文件 (*.json)|*.json|所有文件 (*.*)|*.*"
+        };
+        if (dialog.ShowDialog() == true)
+        {
+            _vm.LoadFromPath(dialog.FileName);
+        }
+    }
+
     private void SaveAsButton_OnClick(object sender, RoutedEventArgs e)
     {
         var dialog = new SaveFileDialog
@@ -34,7 +47,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void AddCardButton_OnClick(object sender, RoutedEventArgs e)
+    private void NewCardButton_OnClick(object sender, RoutedEventArgs e)
     {
         var newCard = new Card();
         var dialog = new CardEditDialog(newCard, isNew: true) { Owner = this };
