@@ -23,12 +23,6 @@ bld/
 *.rsuser
 *.userprefs
 
-# Visual Studio Code (optional: remove if you want to commit shared settings)
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
 
 # JetBrains Rider
 .idea/
