@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.Win32;
 using PromptManager.Models;
@@ -67,5 +68,51 @@ public partial class MainWindow : Window
         {
             _vm.UpdateCard(dialog.EditedCard);
         }
+    }
+
+    private static Card? GetCardFromMenuItem(object sender)
+    {
+        if (sender is not MenuItem menuItem)
+            return null;
+
+        if (menuItem.DataContext is Card cardFromDataContext)
+            return cardFromDataContext;
+
+        if (menuItem.Parent is ContextMenu contextMenu &&
+            contextMenu.PlacementTarget is FrameworkElement fe &&
+            fe.DataContext is Card cardFromPlacementTarget)
+        {
+            return cardFromPlacementTarget;
+        }
+
+        return null;
+    }
+
+    private void CardDeleteMenuItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        var card = GetCardFromMenuItem(sender);
+        if (card is null)
+            return;
+
+        var result = MessageBox.Show(
+            $"确认删除卡片“{card.Title}”吗？",
+            "确认删除",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (result == MessageBoxResult.Yes)
+        {
+            _vm.RemoveCard(card);
+        }
+    }
+
+    private void CardCopyMenuItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        var card = GetCardFromMenuItem(sender);
+        if (card is null)
+            return;
+
+        var text = card.Content ?? string.Empty;
+        Clipboard.SetText(text);
     }
 }
